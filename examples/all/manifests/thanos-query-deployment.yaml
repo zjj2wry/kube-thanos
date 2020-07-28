@@ -7,7 +7,7 @@ metadata:
     app.kubernetes.io/name: thanos-query
     app.kubernetes.io/version: master-2020-05-24-079ad427
   name: thanos-query
-  namespace: thanos
+  namespace: monitoring
 spec:
   replicas: 1
   selector:
@@ -34,7 +34,7 @@ spec:
                   values:
                   - thanos-query
               namespaces:
-              - thanos
+              - monitoring
               topologyKey: kubernetes.io/hostname
             weight: 100
       containers:
@@ -44,9 +44,8 @@ spec:
         - --http-address=0.0.0.0:9090
         - --query.replica-label=prometheus_replica
         - --query.replica-label=rule_replica
-        - --store=dnssrv+_grpc._tcp.thanos-receive.thanos.svc.cluster.local
-        - --store=dnssrv+_grpc._tcp.thanos-rule.thanos.svc.cluster.local
-        - --store=dnssrv+_grpc._tcp.thanos-store.thanos.svc.cluster.local
+        - --store=dnssrv+_grpc._tcp.thanos-receive.monitoring.svc.cluster.local
+        - --store=dnssrv+_grpc._tcp.thanos-store.monitoring.svc.cluster.local
         - --query.timeout=5m
         image: quay.io/thanos/thanos:master-2020-05-24-079ad427
         livenessProbe:
